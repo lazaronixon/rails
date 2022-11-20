@@ -98,7 +98,11 @@ module ActiveRecord
         def update_counters(by)
           if require_counter_update? && foreign_key_present?
             if target && !stale_target?
-              target.increment!(reflection.counter_cache_column, by, touch: reflection.options[:touch])
+              target.increment!(reflection.counter_cache_column, by)
+
+              if touch = reflection.options[:touch]
+                touch != true ? target.touch(touch) : target.touch
+              end
             else
               update_counters_via_scope(klass, owner._read_attribute(reflection.foreign_key), by)
             end

@@ -702,7 +702,7 @@ class BelongsToAssociationsTest < ActiveRecord::TestCase
     debate.touch(time: time)
     debate2.touch(time: time)
 
-    assert_queries(3) do
+    assert_queries(4) do
       reply.parent_title = "debate"
       reply.save!
     end
