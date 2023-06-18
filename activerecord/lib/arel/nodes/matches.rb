@@ -2,7 +2,9 @@
 
 module Arel # :nodoc: all
   module Nodes
-    class Matches < Binary
+    class Matching < Binary
+      include FetchAttribute
+
       attr_reader :escape
       attr_accessor :case_sensitive
 
@@ -13,6 +15,16 @@ module Arel # :nodoc: all
       end
     end
 
-    class DoesNotMatch < Matches; end
+    class Matches < Matching
+      def invert
+        Arel::Nodes::DoesNotMatch.new(left, right, escape, case_sensitive)
+      end
+    end
+
+    class DoesNotMatch < Matching
+      def invert
+        Arel::Nodes::Matches.new(left, right, escape, case_sensitive)
+      end
+    end
   end
 end
